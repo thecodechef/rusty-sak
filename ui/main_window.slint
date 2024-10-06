@@ -1,0 +1,204 @@
+import { ListView, HorizontalBox, VerticalBox } from "std-widgets.slint";
+import { InfoWindow } from "./windows.slint";
+component Button inherits Rectangle {
+  in-out property text <=> txt.text;
+  callback clicked <=> touch.clicked;
+
+  border-radius: 0px;
+  border-width: 1px;
+  border-color: #555;
+  background: touch.has-hover ? #aaa : #666;
+  height: txt.preferred-height * 2.33;
+  width: txt.preferred-width + 105px;
+
+  txt := Text {
+    vertical-alignment: center;
+    horizontal-alignment: center;
+    color: touch.pressed ? #555 : touch.has-hover ? #555 : #ccc;
+  }
+
+  touch := TouchArea {}
+}
+
+export component MainWindow inherits Window {
+  width: 800px;
+  height: 480px;
+  always-on-top: true;
+  title: "RustySAK";
+  callback xci-split();
+  callback xci-merge();
+  callback xci-patch();
+  callback xci-update();
+  callback xci-to-nsp();
+  callback xci-to-xcz();
+  callback xcz-to-xci();
+  callback extract-fw-from-xci();
+  callback nsp-split();
+  callback nsp-merge();
+  callback nsp-patch();
+  callback nsp-update();
+  callback nsp-to-xci();
+  callback nsp-to-nsz();
+  callback nsz-to-nsp();
+  callback extract-save-from-emmc();
+  callback get-info();
+  callback go-to-homepage();
+  callback check-for-updates();
+
+  VerticalBox {
+    min-width: 800px;
+    min-height: 480px;
+    HorizontalBox {
+      min-width: 800px;
+      Rectangle {
+        VerticalBox {
+          alignment: start;
+          Text {
+            text: "XCI";
+            vertical-alignment: center;
+          }
+          padding: 0px;
+          Button {
+            text: "XCI split";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xci-split() }
+          }
+          Button {
+            text: "XCI merge";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xci-merge() }
+          }
+          Button {
+            text: "Patch XCI";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xci-patch() }
+          }
+          Button {
+            text: "Update XCI";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xci-update() }
+          }
+          Button {
+            text: "XCI to NSP";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xci-to-nsp() }
+          }
+          Button {
+            text: "XCI to XCZ";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xci-to-xcz() }
+          }
+          Button {
+            text: "XCZ to XCI";
+            height: 25px;
+            width: 250px;
+            clicked => { root.xcz-to-xci() }
+          }
+          Button {
+            text: "Extract FW from XCI";
+            height: 25px;
+            width: 250px;
+            clicked => { root.extract-fw-from-xci() }
+          }
+        }
+      }
+      Rectangle {
+        VerticalBox {
+          alignment: start;
+          Text {
+            text: "NSP";
+            vertical-alignment: center;
+          }
+          padding: 0px;
+          Button {
+            text: "NSP split";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsp-split() }
+          }
+          Button {
+            text: "NSP merge";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsp-merge() }
+          }
+          Button {
+            text: "Patch NSP";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsp-patch() }
+          }
+          Button {
+            text: "Update NSP";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsp-update() }
+          }
+          Button {
+            text: "NSP to XCI";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsp-to-xci() }
+          }
+          Button {
+            text: "NSP to NSZ";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsp-to-nsz() }
+          }
+          Button {
+            text: "NSZ to NSP";
+            height: 25px;
+            width: 250px;
+            clicked => { root.nsz-to-nsp() }
+          }
+        }
+      }
+      Rectangle {
+        VerticalBox {
+          alignment: start;
+          Text {
+            text: "Misc";
+            vertical-alignment: center;
+          }
+          padding: 0px;
+          Button {
+            text: "Extract Save from eMMC";
+            height: 25px;
+            width: 235px;
+            clicked => { root.extract-save-from-emmc() }
+          }
+        }
+      }
+    }
+    HorizontalLayout {
+      spacing: 10px;
+      alignment: center;
+      Button {
+        text: "Info";
+        clicked => { root.get-info() }
+      }
+      Button {
+        text: "Check for Updates";
+        width: 200px;
+        clicked => { root.check-for-updates() }
+      }
+      Button {
+        text: "Homepage";
+        clicked => { root.go-to-homepage() }
+      }
+    }
+    HorizontalBox {
+      Image {
+        height: 80px;
+        source: @image-url("../resources/logo.png");
+      }
+    }
+  }
+}
