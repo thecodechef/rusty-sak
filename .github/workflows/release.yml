@@ -5,59 +5,18 @@ on:
 name: Release
 
 jobs:
-  windows_release:
-    name: Windows Release
+  release:
+    name: Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
         target:
-          - aarch64-windows-msvc
-          - x86_64-windows-msvc
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target=${{ matrix.target }}
-
-
-  macos_release:
-    name: MacOS Release
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target:
+          - aarch64-pc-windows-msvc
+          - x86_64-pc-windows-msvc
           - aarch64-apple-darwin
           - x86_64-apple-darwin
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target=${{ matrix.target }}
-
-  linux_release:
-    name: Linux Release
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target:
           - aarch64-unknown-linux-gnu
           - x86_64-unknown-linux-gnu
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
