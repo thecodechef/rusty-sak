@@ -1,30 +1,20 @@
-import { ListView, HorizontalBox, VerticalBox } from "std-widgets.slint";
-import { InfoWindow } from "./windows.slint";
-component Button inherits Rectangle {
-  in-out property text <=> txt.text;
-  callback clicked <=> touch.clicked;
+import { HorizontalBox, VerticalBox, LineEdit, Palette } from "std-widgets.slint";
+import { CheckBox, ComboBox, ProgressIndicator } from "std-widgets.slint";
+import { TabWidget, ScrollView, ListView } from "std-widgets.slint";
+import { Button } from "./components.slint";
 
-  border-radius: 0px;
-  border-width: 1px;
-  border-color: #555;
-  background: touch.has-hover ? #aaa : #666;
-  height: txt.preferred-height * 2.33;
-  width: txt.preferred-width + 105px;
-
-  txt := Text {
-    vertical-alignment: center;
-    horizontal-alignment: center;
-    color: touch.pressed ? #555 : touch.has-hover ? #555 : #ccc;
-  }
-
-  touch := TouchArea {}
+global App {
+  out property <string> name: "RustySAK";
+  out property <string> version: "0.1.0";
+  out property <string> homepage: "https://rusty-sak.github.io";
 }
 
 export component MainWindow inherits Window {
-  width: 800px;
-  height: 480px;
-  always-on-top: true;
+  width: 600px;
+  height: 450px;
   title: "RustySAK";
+
+  // XCI
   callback xci-split();
   callback xci-merge();
   callback xci-patch();
@@ -33,6 +23,8 @@ export component MainWindow inherits Window {
   callback xci-to-xcz();
   callback xcz-to-xci();
   callback extract-fw-from-xci();
+
+  // NSP
   callback nsp-split();
   callback nsp-merge();
   callback nsp-patch();
@@ -40,164 +32,692 @@ export component MainWindow inherits Window {
   callback nsp-to-xci();
   callback nsp-to-nsz();
   callback nsz-to-nsp();
-  callback extract-save-from-emmc();
-  callback get-info();
-  callback go-to-homepage();
-  callback check-for-updates();
 
-  VerticalBox {
-    min-width: 800px;
-    min-height: 480px;
-    HorizontalBox {
-      min-width: 800px;
-      Rectangle {
-        VerticalBox {
-          alignment: start;
-          Text {
-            text: "XCI";
-            vertical-alignment: center;
+  // Misc
+  callback format-to-fat32();
+  callback extract-save-from-emmc();
+  callback nro-forwarder();
+
+  // Other
+  callback get-info();
+  callback check-for-updates();
+  callback go-to-homepage();
+
+  // XCI
+  xci_split_popup := PopupWindow {}
+  xci_merge_popup := PopupWindow {}
+  xci_patch_popup := PopupWindow {}
+  xci_update_popup := PopupWindow {}
+  xci_to_nsp_popup := PopupWindow {
+    x: root.width / 4;
+    y: root.height / 2;
+    close-on-click: false;
+    Rectangle {
+      width: root.width - 100px;
+      height: root.height / 4;
+      border-radius: 12px;
+      border-color: Palette.foreground;
+      border-width: 1px;
+      background: Palette.background;
+      VerticalBox {
+        alignment: center;
+        HorizontalLayout {
+          LineEdit {
+            placeholder-text: "XCI Path";
           }
-          padding: 0px;
+          spacing: 10px;
           Button {
-            text: "XCI split";
-            height: 25px;
+            text: "Convert to NSP";
+            height: 30px;
             width: 250px;
-            clicked => { root.xci-split() }
-          }
-          Button {
-            text: "XCI merge";
-            height: 25px;
-            width: 250px;
-            clicked => { root.xci-merge() }
-          }
-          Button {
-            text: "Patch XCI";
-            height: 25px;
-            width: 250px;
-            clicked => { root.xci-patch() }
-          }
-          Button {
-            text: "Update XCI";
-            height: 25px;
-            width: 250px;
-            clicked => { root.xci-update() }
-          }
-          Button {
-            text: "XCI to NSP";
-            height: 25px;
-            width: 250px;
-            clicked => { root.xci-to-nsp() }
-          }
-          Button {
-            text: "XCI to XCZ";
-            height: 25px;
-            width: 250px;
-            clicked => { root.xci-to-xcz() }
-          }
-          Button {
-            text: "XCZ to XCI";
-            height: 25px;
-            width: 250px;
-            clicked => { root.xcz-to-xci() }
-          }
-          Button {
-            text: "Extract FW from XCI";
-            height: 25px;
-            width: 250px;
-            clicked => { root.extract-fw-from-xci() }
+            clicked => {
+              root.xci-to-nsp();
+            }
           }
         }
-      }
-      Rectangle {
-        VerticalBox {
-          alignment: start;
-          Text {
-            text: "NSP";
-            vertical-alignment: center;
+        HorizontalLayout {
+          LineEdit {
+            placeholder-text: "NSP Path";
           }
-          padding: 0px;
+          spacing: 10px;
           Button {
-            text: "NSP split";
-            height: 25px;
+            text: "Close";
+            height: 30px;
             width: 250px;
-            clicked => { root.nsp-split() }
-          }
-          Button {
-            text: "NSP merge";
-            height: 25px;
-            width: 250px;
-            clicked => { root.nsp-merge() }
-          }
-          Button {
-            text: "Patch NSP";
-            height: 25px;
-            width: 250px;
-            clicked => { root.nsp-patch() }
-          }
-          Button {
-            text: "Update NSP";
-            height: 25px;
-            width: 250px;
-            clicked => { root.nsp-update() }
-          }
-          Button {
-            text: "NSP to XCI";
-            height: 25px;
-            width: 250px;
-            clicked => { root.nsp-to-xci() }
-          }
-          Button {
-            text: "NSP to NSZ";
-            height: 25px;
-            width: 250px;
-            clicked => { root.nsp-to-nsz() }
-          }
-          Button {
-            text: "NSZ to NSP";
-            height: 25px;
-            width: 250px;
-            clicked => { root.nsz-to-nsp() }
-          }
-        }
-      }
-      Rectangle {
-        VerticalBox {
-          alignment: start;
-          Text {
-            text: "Misc";
-            vertical-alignment: center;
-          }
-          padding: 0px;
-          Button {
-            text: "Extract Save from eMMC";
-            height: 25px;
-            width: 235px;
-            clicked => { root.extract-save-from-emmc() }
+            clicked => {
+              xci_to_nsp_popup.close();
+            }
           }
         }
       }
     }
+  }
+  xci_to_xcz_popup := PopupWindow {
+    x: root.width / 4;
+    y: root.height / 2;
+    close-on-click: false;
+    Rectangle {
+      width: root.width - 100px;
+      height: root.height / 4;
+      border-radius: 12px;
+      border-color: Palette.foreground;
+      border-width: 1px;
+      background: Palette.background;
+      VerticalBox {
+        alignment: center;
+        HorizontalLayout {
+          LineEdit {
+            placeholder-text: "XCI Path";
+          }
+          spacing: 10px;
+          Button {
+            text: "Convert to XCZ";
+            height: 30px;
+            width: 250px;
+            clicked => {
+              root.xci-to-xcz();
+            }
+          }
+        }
+        HorizontalLayout {
+          LineEdit {
+            placeholder-text: "XCZ Path";
+          }
+          spacing: 10px;
+          Button {
+            text: "Close";
+            height: 30px;
+            width: 250px;
+            clicked => {
+              xci_to_xcz_popup.close();
+            }
+          }
+        }
+      }
+    }
+  }
+  xcz_to_xci_popup := PopupWindow {
+    x: root.width / 4;
+    y: root.height / 2;
+    close-on-click: false;
+    Rectangle {
+      width: root.width - 100px;
+      height: root.height / 4;
+      border-radius: 12px;
+      border-color: Palette.foreground;
+      border-width: 1px;
+      background: Palette.background;
+      VerticalBox {
+        alignment: center;
+        HorizontalLayout {
+          LineEdit {
+            placeholder-text: "XCZ Path";
+          }
+          spacing: 10px;
+          Button {
+            text: "Convert to XCI";
+            height: 30px;
+            width: 250px;
+            clicked => {
+              root.xci-to-xcz();
+            }
+          }
+        }
+        HorizontalLayout {
+          LineEdit {
+            placeholder-text: "XCI Path";
+          }
+          spacing: 10px;
+          Button {
+            text: "Close";
+            height: 30px;
+            width: 250px;
+            clicked => {
+              xci_to_xcz_popup.close();
+            }
+          }
+        }
+      }
+    }
+  }
+  extract_fw_from_xci_popup := PopupWindow {
+    x: root.width / 4;
+    y: root.height / 2;
+    close-on-click: false;
+    Rectangle {
+      width: root.width - 100px;
+      height: root.height / 4;
+      border-radius: 12px;
+      border-color: Palette.foreground;
+      border-width: 1px;
+      background: Palette.background;
+      VerticalBox {
+        alignment: center;
+        HorizontalLayout {
+          VerticalLayout {
+            alignment: center;
+            LineEdit {
+              height: 30px;
+              placeholder-text: "XCI Path";
+            }
+          }
+          spacing: 10px;
+          VerticalLayout {
+            spacing: 20px;
+            Button {
+              text: "Extract from XCI";
+              height: 30px;
+              width: 250px;
+              clicked => {
+                root.extract-fw-from-xci();
+              }
+            }
+            Button {
+              text: "Close";
+              height: 30px;
+              width: 250px;
+              clicked => {
+                xci_to_xcz_popup.close();
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // NSP
+  nsp_split_popup := PopupWindow {
+    x: root.width / 5;
+    y: root.height / 9;
+    close-on-click: false;
+    Rectangle {
+      width: root.width - 300px;
+      height: root.height  - 100px;
+      border-radius: 12px;
+      border-color: Palette.foreground;
+      border-width: 1px;
+      background: Palette.background;
+      VerticalLayout {
+        alignment: start;
+        padding-top: 20px;
+        padding-bottom: 45px;
+        spacing: 15px;
+        HorizontalLayout {
+          alignment: center;
+          VerticalLayout {
+            spacing: 10px;
+            Text { text: "Select your NSP"; }
+            Button { text: "Open NSP"; }
+          }
+        }
+        HorizontalLayout {
+          alignment: center;
+          VerticalLayout {
+            Text {
+              horizontal-alignment: center;
+              text: "Choose USB device (optional)";
+            }
+            HorizontalLayout {
+              alignment: center;
+              CheckBox { text: "Direct Split to USB"; }
+              VerticalBox {
+                alignment: start;
+                Button { text: "Refresh USB list"; }
+                ComboBox {}
+                ComboBox {}
+              }
+            }
+          }
+        }
+        HorizontalLayout {
+          alignment: center;
+          VerticalLayout {
+            spacing: 10px;
+            Text {
+              horizontal-alignment: center;
+              text: "Start splitting";
+            }
+            VerticalBox {
+              width: 80%;
+              HorizontalLayout {
+                Button { text: "Split NSP file"; }
+                Button { text: "Cancel splitting"; }
+              }
+              Text {
+                horizontal-alignment: center;
+                text: "State: nothing to do";
+              }
+              Text {
+                horizontal-alignment: center;
+                visible: false;
+                text: "Splitting NSP ...";
+              }
+              ProgressIndicator {
+                height: 30px;
+                progress: 25%;
+              }
+            }
+          }
+        }
+        HorizontalLayout {
+          alignment: center;
+          padding-top: 45px;
+          Button { text: "Close"; clicked => { nsp_split_popup.close() } }
+        }
+      }
+    }
+  }
+  nsp_merge_popup := PopupWindow {}
+  nsp_patch_popup := PopupWindow {}
+  nsp_update_popup := PopupWindow {}
+  nsp_to_xci_popup := PopupWindow {}
+  nsp_to_nsz_popup := PopupWindow {}
+  nsz_to_nsp_popup := PopupWindow {}
+
+  // Misc
+  fat32_format_popup := PopupWindow {}
+  extract_save_from_emmc_popup := PopupWindow {}
+  nro_forwarder_popup := PopupWindow {
+    x: 0px;
+    y: 0px;
+    close-on-click: false;
+    Rectangle {
+      width: root.width  - 300px;
+      height: root.height - 50px;
+      border-radius: 12px;
+      border-color: Palette.background.brighter(0.5);
+      border-width: 1px;
+      background: Palette.background;
+      VerticalLayout {
+        padding-top: 5px;
+        spacing: 8px;
+        alignment: center;
+        Text {
+          horizontal-alignment: center;
+          text: "NRO Forwarder";
+        }
+        Rectangle {
+          border-width: 1px;
+          border-color: Palette.background.brighter(0.5);
+          VerticalBox {
+            HorizontalLayout {
+              alignment: start;
+              spacing: 10px;
+              Text {
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                text: "AppName:";
+              }
+              LineEdit {
+                placeholder-text: "TITLE NAME";
+              }
+            }
+            HorizontalLayout {
+              alignment: start;
+              spacing: 10px;
+              Text {
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                text: "TitleID:";
+              }
+              LineEdit {
+                placeholder-text: "01FA1AF062DBB000";
+              }
+              Button {
+                text: "Generate new TitleID";
+                clicked => {
+                  // root.generate_new_titleid();
+                }
+              }
+            }
+            HorizontalLayout {
+              alignment: start;
+              spacing: 10px;
+              Text {
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                text: "Author:";
+              }
+              LineEdit {
+                placeholder-text: "AUTHOR";
+              }
+            }
+            HorizontalLayout {
+              alignment: start;
+              spacing: 10px;
+              Text {
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                text: "Version:";
+              }
+              LineEdit {
+                placeholder-text: "1.0";
+              }
+            }
+            HorizontalLayout {
+              alignment: start;
+              spacing: 10px;
+              Text {
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                text: "Icon(256x256):";
+              }
+              Button {
+                text: "Open JPG";
+              }
+            }
+          }
+        }
+        Rectangle {
+          border-width: 1px;
+          border-color: Palette.background.brighter(0.5);
+          HorizontalLayout {
+            spacing: 10px;
+            alignment: center;
+            VerticalLayout {
+              padding-top: 10px;
+              padding-bottom: 10px;
+              spacing: 10px;
+              CheckBox { text: "Allow screenshots in forwarder?"; }
+              CheckBox { text: "Allow video recording in forwarder?"; }
+              CheckBox { text: "No startup logo"; }
+            }
+          }
+        }
+        Rectangle {
+          border-width: 1px;
+          border-color: Palette.background.brighter(0.5);
+          width: 90%;
+          height: 110px;
+          HorizontalLayout {
+            TabWidget {
+              Tab {
+                title: "Standard NRO";
+                HorizontalLayout {
+                  padding-top: 10px;
+                  padding-left: 10px;
+                  padding-right: 10px;
+                  spacing: 10px;
+                  Text { vertical-alignment: center; text: "NRO path"; }
+                  LineEdit {
+                    horizontal-alignment: left;
+                    height: 25px;
+                    placeholder-text: "/switch/App-Dir/App.nro";
+                  }
+                }
+              }
+              Tab {
+                title: "Retroarch Core";
+                VerticalLayout {
+                  padding-top: 10px;
+                  padding-left: 10px;
+                  padding-right: 10px;
+                  spacing: 10px;
+                  alignment: start;
+                  HorizontalLayout {
+                    spacing: 10px;
+                    Text {vertical-alignment: center; text: "Core path"; }
+                    LineEdit {
+                      height: 25px;
+                      placeholder-text: "/retroarch/cores/core.nro";
+                    }
+                  }
+                  HorizontalLayout {
+                    spacing: 10px;
+                    Text {vertical-alignment: center; text: "Roms path"; }
+                    LineEdit {
+                      height: 25px;
+                      placeholder-text: "/retroarch/roms/ROMNAME.extension";
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        Rectangle {
+          border-width: 1px;
+          border-color: Palette.background.brighter(0.5);
+          HorizontalLayout {
+            padding: 10px;
+            spacing: 30px;
+            alignment: center;
+            Button {
+              enabled: false;
+              text: "Create NRO Forwarder";
+              clicked => { root.nro-forwarder() }
+            }
+            Button {
+              text: "Close";
+              clicked => { nro_forwarder_popup.close() }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  info_popup := PopupWindow {
+    x: 0px;
+    y: 0px;
+    width: root.width;
+    height: root.height;
+    close-on-click: false;
+    Rectangle {
+      width: root.width;
+      height: root.height;
+      background: Palette.background;
+      VerticalBox {
+        alignment: start;
+        HorizontalLayout {
+          VerticalLayout {
+            alignment: start;
+            spacing: 10px;
+            Image {
+              height: 64px;
+              width: 64px;
+              source: @image-url("../resources/ios/colorized/rusty_sak-logo-colorized-64x64@3x.png");
+            }
+            HorizontalLayout {
+              Text { font-weight: 700; text: "App Name: "; }
+              Text { text: "\{App.name}"; }
+            }
+            HorizontalLayout {
+              Text { font-weight: 700; text: "Version: "; }
+              Text { text: "\{App.version}"; }
+            }
+          }
+          VerticalBox {
+            Text {
+              font-size: 12px;
+              text: "With \"\{App.name}\" you can easily manage the files for your Switch";
+              wrap: word-wrap;
+            }
+            ListView {
+              height: 150px;
+              for item in [
+                { text: "Patch XCI to lower firmware" },
+                { text: "Split/Merge XCI" },
+                { text: "Update XCI with updates/dlc" },
+                { text: "Convert XCI to NSP" },
+                { text: "Compress XCI to XCZ" },
+                { text: "Decompress XCZ to XCI" },
+                { text: "Extract FW from XCI" },
+                { text: "Patch NSP to lower firmware" },
+                { text: "Split/Merge NSP" },
+                { text: "Update NSP with updates/dlc" },
+                { text: "Convert NSP to XCI" },
+                { text: "Compress NSP to NSZ" },
+                { text: "Decompress NSZ to NSP" },
+                { text: "Extract Your Switch Saves which you have copied from the User partition" },
+                { text: "Create NRO / Retroarch Forwarder as installable NSP file" },
+                { text: "Format sd card (all sizes) to FAT32" },
+
+              ] : Text {
+                font-size: 12px;
+                text: "- \{item.text}";
+                wrap: word-wrap;
+              }
+            }
+            Text {
+              font-size: 12px;
+              text: "Thanks goes to:";
+            }
+            ListView {
+              height: 130px;
+              for item in [
+                { text: "The Original SAK.exe by kempa" },
+                { text: "nsz.py which inspired me to write nsz-rs" },
+                { text: "The-4n and SciresM for 4NXCI / reNXpack" },
+                { text: "The-4n for hacBrewPack / hptnacp" },
+                { text: "switchbrew for nx-hbloader" },
+                { text: "SciresM for hactool" },
+                { text: "Thealexbarney for libhac" },
+                { text: "julesontheroad for NSC_BUILDER" },
+                { text: "fatfs for handling FAT32 formatting" },
+              ] : Text {
+                font-size: 12px;
+                text: "- \{item.text}";
+                wrap: word-wrap;
+              }
+            }
+            Text {
+              font-size: 12px;
+              text: "For Support check: \{App.homepage}";
+            }
+          }
+        }
+        HorizontalLayout {
+          alignment: end;
+          Button {
+            text: "Close";
+            clicked => { info_popup.close() }
+          }
+        }
+      }
+    }
+  }
+  VerticalLayout {
+    padding-bottom: 15px;
     HorizontalLayout {
-      spacing: 10px;
       alignment: center;
-      Button {
-        text: "Info";
-        clicked => { root.get-info() }
+      padding: 10px;
+      spacing: 8px;
+      Rectangle {
+        width: 480px / 3;
+        border-width: 1px;
+        border-color: Palette.background.brighter(0.5);
+        VerticalLayout {
+          padding: 8px;
+          spacing: 8px;
+          Text {
+            horizontal-alignment: left;
+            vertical-alignment: top;
+            text: "XCI";
+          }
+          ListView {
+            padding: 3px;
+            for item in [
+              { text: "Patch XCI" },
+              { text: "Split XCI" },
+              { text: "Update XCI" },
+              { text: "Merge XCI" },
+              { text: "XCI to NSP" },
+              { text: "XCI to XCZ" },
+              { text: "XCZ to XCI" },
+              { text: "Extract FW from XCI" },
+            ]  : Button {
+              width: 130px;
+              text: item.text;
+            }
+          }
+        }
       }
-      Button {
-        text: "Check for Updates";
-        width: 200px;
-        clicked => { root.check-for-updates() }
+      Rectangle {
+        width: 480px / 3;
+        height: 270px;
+        border-width: 1px;
+        border-color: Palette.background.brighter(0.5);
+        VerticalLayout {
+          padding: 8px;
+          spacing: 8px;
+          Text {
+            horizontal-alignment: left;
+            vertical-alignment: top;
+            text: "NSP";
+          }
+          ListView {
+            padding: 3px;
+            for item in [
+              { text: "Patch XCI" },
+              { text: "Split XCI" },
+              { text: "Update XCI" },
+              { text: "Merge XCI" },
+              { text: "XCI to NSP" },
+              { text: "XCI to XCZ" },
+              { text: "XCZ to XCI" },
+              { text: "Extract FW from XCI" },
+            ]  : Button {
+              width: 130px;
+              text: item.text;
+            }
+          }
+        }
       }
-      Button {
-        text: "Homepage";
-        clicked => { root.go-to-homepage() }
+      Rectangle {
+        width: 480px / 2.6;
+        border-width: 1px;
+        border-color: Palette.background.brighter(0.5);
+        VerticalLayout {
+          padding: 8px;
+          spacing: 8px;
+          Text {
+            horizontal-alignment: left;
+            vertical-alignment: top;
+            text: "Misc";
+          }
+          ListView {
+            padding: 3px;
+            for item in [
+              { text: "Format FAT32" },
+              { text: "Extract Save from eMMC" },
+              { text: "NRO Forwarder" },
+            ]  : Button {
+              width: 160px;
+              text: item.text;
+            }
+          }
+        }
       }
     }
-    HorizontalBox {
+    Rectangle { height: 20px; }
+    HorizontalLayout {
+      alignment: center;
+      padding-top: 5px;
+      padding-bottom: 15px;
+      spacing: 3px;
+      Button { text: "Info"; width: 100px; clicked => { info_popup.show() } }
+      Button { text: "Check for updates"; width: 150px; }
+      Button { text: "Homepage"; width: 100px; }
+    }
+    Rectangle { height: 10px; }
+    HorizontalLayout {
+      padding-left: 15px;
+      padding-right: 15px;
       Image {
-        height: 80px;
-        source: @image-url("../resources/logo.png");
+        horizontal-alignment: left;
+        height: 64px;
+        source: @image-url("../resources/ios/svg/rusty_sak-logo.svg");
+        colorize: white;
+        opacity: 0.2;
+      }
+      Image {
+        horizontal-alignment: right;
+        height: 64px;
+        source: @image-url("../resources/slint-logo.svg");
+        colorize: white;
+        opacity: 0.2;
       }
     }
   }

@@ -1,0 +1,27 @@
+name = "rusty_sak"
+product-name = "RustySak"
+identifier = "com.thecodechef.rusty-sak"
+version = "0.1.0"
+description = "A version of SAK written in rust"
+copyright = "Copyright © 2024 Jeremy Bolding, All Rights Reserved"
+category = "Developement Tools"
+homepage = "https://rusty-sak.github.io/"
+icons = [
+  "resources/ios/colorized/rusty_sak-logo-colorized-48x48.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-48x48@2x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-48x48@3x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-64x64.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-64x64@2x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-64x64@3x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-128x128.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-128x128@2x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-128x128@3x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-256x256.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-256x256@2x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-256x256@3x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-512x512.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-512x512@2x.png",
+  "resources/ios/colorized/rusty_sak-logo-colorized-512x512@3x.png",
+]
+formats = ["app", "nsis", "deb"]
+before-packaging-command = "cargo build --release"

@@ -1,0 +1,26 @@
+export component Button inherits Rectangle {
+  in property <bool> enabled: true;
+  in-out property text <=> txt.text;
+  callback clicked <=> touch.clicked;
+
+  border-radius: 0px;
+  border-width: 1px;
+  border-color: #555;
+  background: touch.has-hover ? #aaa : #666;
+  height: txt.preferred-height * 2.33;
+  width: txt.preferred-width + 105px;
+
+  txt := Text {
+    vertical-alignment: center;
+    horizontal-alignment: center;
+    color: touch.pressed ? #555 : touch.has-hover ? #555 : #ccc;
+  }
+
+  touch := TouchArea {}
+
+  states [
+    disabled when !root.enabled : {
+      root.opacity: 0.38;
+    }
+  ]
+}

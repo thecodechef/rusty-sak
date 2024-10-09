@@ -1,3 +1,5 @@
+use rfd::FileDialog;
+
 slint::include_modules!();
 
 mod xci;
@@ -27,7 +29,16 @@ fn main() {
   ui.on_nsz_to_nsp(|| { nsp::nsz_to_nsp(); });
 
   // Misc
+  ui.on_format_to_fat32(move || {
+    if let Some(path) = FileDialog::new().pick_file() {
+      match utils::format_to_fat32(&path) {
+        Ok(_) => println!("Successfully formatted {} to FAT32", path.display()),
+        Err(e) => println!("Error formatting to FAT32: {}", e),
+      }
+    }
+  });
   ui.on_extract_save_from_emmc(|| { utils::extract_from_emmc(); });
+  ui.on_nro_forwarder(|| { utils::nro_forwarder(); });
 
   // Utils
   ui.on_get_info(|| { utils::get_info(); });
