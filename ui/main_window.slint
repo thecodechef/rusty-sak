@@ -598,6 +598,7 @@ export component MainWindow inherits Window {
       }
     }
   }
+
   VerticalLayout {
     padding-bottom: 15px;
     HorizontalLayout {
@@ -606,6 +607,7 @@ export component MainWindow inherits Window {
       spacing: 8px;
       Rectangle {
         width: 480px / 3;
+        height: 280px;
         border-width: 1px;
         border-color: Palette.background.brighter(0.5);
         VerticalLayout {
@@ -616,27 +618,31 @@ export component MainWindow inherits Window {
             vertical-alignment: top;
             text: "XCI";
           }
-          ListView {
-            padding: 3px;
-            for item in [
-              { text: "Patch XCI" },
-              { text: "Split XCI" },
-              { text: "Update XCI" },
-              { text: "Merge XCI" },
-              { text: "XCI to NSP" },
-              { text: "XCI to XCZ" },
-              { text: "XCZ to XCI" },
-              { text: "Extract FW from XCI" },
-            ]  : Button {
-              width: 130px;
-              text: item.text;
+          HorizontalLayout {
+            alignment: center;
+            ListView {
+              width: 480px / 2.6;
+              padding: 3px;
+              for item in [
+                { text: "Patch XCI" },
+                { text: "Split XCI" },
+                { text: "Update XCI" },
+                { text: "Merge XCI" },
+                { text: "XCI to NSP" },
+                { text: "XCI to XCZ" },
+                { text: "XCZ to XCI" },
+                { text: "Extract FW from XCI" },
+              ]  : Button {
+                width: 130px;
+                text: item.text;
+              }
             }
           }
         }
       }
       Rectangle {
         width: 480px / 3;
-        height: 270px;
+        height: 280px;
         border-width: 1px;
         border-color: Palette.background.brighter(0.5);
         VerticalLayout {
@@ -647,26 +653,30 @@ export component MainWindow inherits Window {
             vertical-alignment: top;
             text: "NSP";
           }
-          ListView {
-            padding: 3px;
-            for item in [
-              { text: "Patch XCI" },
-              { text: "Split XCI" },
-              { text: "Update XCI" },
-              { text: "Merge XCI" },
-              { text: "XCI to NSP" },
-              { text: "XCI to XCZ" },
-              { text: "XCZ to XCI" },
-              { text: "Extract FW from XCI" },
-            ]  : Button {
-              width: 130px;
-              text: item.text;
+          HorizontalLayout {
+            alignment: center;
+            ListView {
+              width: 480px / 2.6;
+              padding: 3px;
+              for item in [
+                { text: "Patch NSP" },
+                { text: "Split NSP" },
+                { text: "Update NSP" },
+                { text: "Merge NSP" },
+                { text: "NSP to XCI" },
+                { text: "NSP to NSZ" },
+                { text: "NSZ to NSP" },
+              ]  : Button {
+                width: 130px;
+                text: item.text;
+              }
             }
           }
         }
       }
       Rectangle {
         width: 480px / 2.6;
+        height: 280px;
         border-width: 1px;
         border-color: Palette.background.brighter(0.5);
         VerticalLayout {
@@ -677,15 +687,19 @@ export component MainWindow inherits Window {
             vertical-alignment: top;
             text: "Misc";
           }
-          ListView {
-            padding: 3px;
-            for item in [
-              { text: "Format FAT32" },
-              { text: "Extract Save from eMMC" },
-              { text: "NRO Forwarder" },
-            ]  : Button {
-              width: 160px;
-              text: item.text;
+          HorizontalLayout {
+            alignment: center;
+            ListView {
+              width: 480px / 2.6;
+              padding: 3px;
+              for item in [
+                { text: "Format FAT32" },
+                { text: "Extract Save from eMMC" },
+                { text: "NRO Forwarder" },
+              ]  : Button {
+                width: 160px;
+                text: item.text;
+              }
             }
           }
         }
@@ -699,7 +713,7 @@ export component MainWindow inherits Window {
       spacing: 3px;
       Button { text: "Info"; width: 100px; clicked => { info_popup.show() } }
       Button { text: "Check for updates"; width: 150px; }
-      Button { text: "Homepage"; width: 100px; }
+      Button { text: "Homepage"; width: 100px; clicked => { root.go-to-homepage() } }
     }
     Rectangle { height: 10px; }
     HorizontalLayout {
